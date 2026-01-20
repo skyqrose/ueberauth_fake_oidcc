@@ -5,8 +5,6 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     formats: [:html, :json],
     layouts: [html: UeberauthFakeOidccWeb.Layouts]
 
-  import Plug.Conn
-
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
     groups = [
@@ -17,7 +15,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
     conn
     |> put_resp_content_type("text/html")
-    |> put_view(UeberauthFakeOidccWeb.Layouts)
+    |> put_view(__MODULE__.View)
     |> render(:fake_login, groups: groups, layout: false)
     |> halt()
   end
@@ -80,5 +78,42 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   @impl Ueberauth.Strategy
   def handle_cleanup!(conn) do
     conn
+  end
+
+  defmodule View do
+    use Phoenix.Component
+
+    def fake_login(assigns) do
+      ~H"""
+      <main class="p-4">
+        <h1>Fake Keycloak/Oidcc</h1>
+        <!-- TODO configurable callback url -->
+        <form action="/auth/keycloak/callback">
+          <div>
+            <label>
+              <!-- TODO configurable default email -->
+              Email: <input type="email" name="email" value="user@example.com" />
+            </label>
+          </div>
+          <%= for group <- @groups do %>
+            <div>
+              <label>
+                <input type="checkbox" name="groups[]" value={group} />
+                {group} group
+              </label>
+            </div>
+          <% end %>
+          <div>
+            <button
+              class="mt-3 rounded-md border border-solid border-black hover:bg-gray-200 px-4 py-2 shadow"
+              type="submit"
+            >
+              Log in
+            </button>
+          </div>
+        </form>
+      </main>
+      """
+    end
   end
 end

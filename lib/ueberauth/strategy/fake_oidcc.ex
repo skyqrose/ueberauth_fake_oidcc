@@ -1,9 +1,7 @@
 defmodule Ueberauth.Strategy.FakeOidcc do
   use Ueberauth.Strategy, ignores_csrf_attack: true
 
-  use Phoenix.Controller,
-    formats: [:html, :json],
-    layouts: [html: UeberauthFakeOidccWeb.Layouts]
+  use Phoenix.Controller
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do

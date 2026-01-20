@@ -6,14 +6,7 @@ defmodule UeberauthFakeOidcc.MixProject do
       app: :ueberauth_fake_oidcc,
       version: "0.1.0",
       elixir: ">= 1.18.0 and < 2.0.0",
-      start_permanent: Mix.env() == :prod,
       deps: deps()
-    ]
-  end
-
-  def application do
-    [
-      extra_applications: [:logger]
     ]
   end
 

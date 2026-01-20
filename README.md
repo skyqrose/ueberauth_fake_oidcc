@@ -18,19 +18,12 @@ end
 config :ueberauth, Ueberauth,
   providers: [
     keycloak: {Ueberauth.Strategy.FakeOidcc, [
+      client_id: "dev-client-id",
       groups: [
         "group1",
         "group2",
       ]
     ]}
-  ]
-config :ueberauth_oidcc,
-  providers: [
-    keycloak: [
-      issuer: "dev-issuer",
-      client_id: "dev-client-id",
-      client_secret: "dev-secret"
-    ]
   ]
 ```
 

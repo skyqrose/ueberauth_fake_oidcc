@@ -6,7 +6,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
-    opts = Helpers.options(conn)
+    opts = get_options!(conn)
     groups = Keyword.get(opts, :groups, [])
 
     conn
@@ -56,16 +56,16 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def extra(conn) do
-    groups = conn.params["groups"] || []
+    opts = get_options!(conn)
+    client_id = Keyword.get(opts, :client_id, "fake_client_id")
 
-    keycloak_client_id =
-      get_in(Application.get_env(:ueberauth_oidcc, :providers), [:keycloak, :client_id])
+    groups = conn.params["groups"] || []
 
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
         userinfo: %{
           "resource_access" => %{
-            keycloak_client_id => %{"roles" => groups}
+            client_id => %{"roles" => groups}
           }
         }
       }
@@ -112,5 +112,25 @@ defmodule Ueberauth.Strategy.FakeOidcc do
       </main>
       """
     end
+  end
+
+  defp get_options!(conn) do
+    compile_opts = Helpers.options(conn) || []
+    provider = Helpers.strategy_name(conn)
+
+    # TODO provider is nil cuz haven't come through normal controller at /auth/<provider>
+    # how to specify it in the test?
+
+    runtime_opts =
+      (Application.get_env(:ueberauth, Ueberauth) || [])
+      |> Keyword.get(:providers, [])
+      |> Keyword.get(provider, [])
+
+
+    dbg()
+    UeberauthOidcc.Config.merge_and_expand_configuration([
+      compile_opts,
+      runtime_opts
+    ])
   end
 end

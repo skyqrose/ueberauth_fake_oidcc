@@ -1,15 +1,13 @@
 defmodule Ueberauth.Strategy.FakeOidcc do
   use Ueberauth.Strategy, ignores_csrf_attack: true
-
   use Phoenix.Controller
+
+  alias Ueberauth.Strategy.Helpers
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
-    groups = [
-      # TODO configurable groups
-      "group1",
-      "group2"
-    ]
+    opts = Helpers.options(conn)
+    groups = Keyword.get(opts, :groups, [])
 
     conn
     |> put_resp_content_type("text/html")
@@ -35,6 +33,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def credentials(_conn) do
+    # TODO make configurable?
     nine_hours_in_seconds = 9 * 60 * 60
     expiration_time = System.system_time(:second) + nine_hours_in_seconds
 

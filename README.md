@@ -13,7 +13,7 @@ by adding `ueberauth_fake_oidcc` to your list of dependencies in `mix.exs`:
 # mix.exs
 def deps do
   [
-    {:ueberauth_fake_oidcc, [github: "skyqrose/ueberauth_fake_oidcc", only: :dev]}
+    {:ueberauth_fake_oidcc, [github: "skyqrose/ueberauth_fake_oidcc", only: :dev, :test]}
   ]
 end
 ```

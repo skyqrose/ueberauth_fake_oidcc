@@ -6,19 +6,33 @@ TODO screenshot
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ueberauth_fake_oidcc` to your list of dependencies in `mix.exs`:
-
 ```elixir
 # mix.exs
 def deps do
   [
-    {:ueberauth_fake_oidcc, [github: "skyqrose/ueberauth_fake_oidcc", only: :dev, :test]}
+    {:ueberauth_fake_oidcc, [github: "skyqrose/ueberauth_fake_oidcc", only: :dev, :test]},
   ]
 end
-```
 
-TODO dev.exs configuration
+# config/dev.exs and config/test.exs
+config :ueberauth, Ueberauth,
+  providers: [
+    keycloak: {Ueberauth.Strategy.FakeOidcc, [
+      groups: [
+        "group1",
+        "group2",
+      ]
+    ]}
+  ]
+config :ueberauth_oidcc,
+  providers: [
+    keycloak: [
+      issuer: "dev-issuer",
+      client_id: "dev-client-id",
+      client_secret: "dev-secret"
+    ]
+  ]
+```
 
 TODO:
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)

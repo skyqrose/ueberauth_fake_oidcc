@@ -28,4 +28,26 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
       assert conn.resp_body =~ "Log in"
     end
   end
+
+  describe "handle_callback" do
+    test "works" do
+      conn =
+        conn(:get, "/auth/providername/callback?email=test@test.example")
+        |> init_test_session(%{})
+        |> Plug.Conn.fetch_query_params()
+        |> Ueberauth.run_callback(:providername, {FakeOidcc, []})
+
+      assert Map.get(conn.assigns, :ueberauth_failure) == nil
+    end
+
+    test "is invalid if given invalid param" do
+      conn =
+        conn(:get, "/auth/providername/callback?email=test@test.example&invalid")
+        |> init_test_session(%{})
+        |> Plug.Conn.fetch_query_params()
+        |> Ueberauth.run_callback(:providername, {FakeOidcc, []})
+
+      assert Map.get(conn.assigns, :ueberauth_failure) != nil
+    end
+  end
 end

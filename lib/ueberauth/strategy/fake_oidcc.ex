@@ -10,8 +10,8 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     groups = Keyword.get(opts, :groups, [])
 
     conn
-    |> put_resp_content_type("text/html")
     |> put_format(:html)
+    |> put_resp_content_type("text/html")
     |> put_view(__MODULE__.View)
     |> render(:fake_login, groups: groups, layout: false)
     |> halt()
@@ -80,6 +80,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   defmodule View do
     use Phoenix.Component
+    # TODO options for failure modes: redirect to invalid?
 
     def fake_login(assigns) do
       ~H"""

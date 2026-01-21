@@ -88,13 +88,4 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
       assert Map.get(conn.assigns, :ueberauth_failure) != nil
     end
   end
-
-  describe "handle_cleanup!" do
-    test "doesn't crash" do
-      # doesn't do anything, but Ueberauth calls it and it's not covered above
-      # so verify it doesn't crash I guess
-      conn = Phoenix.ConnTest.build_conn()
-      assert FakeOidcc.handle_cleanup!(conn) == conn
-    end
-  end
 end

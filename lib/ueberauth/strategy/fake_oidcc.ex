@@ -50,6 +50,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     %Ueberauth.Auth.Credentials{
       token: "fake_access_token",
       refresh_token: "fake_refresh_token",
+      token_type: "Bearer",
       expires: true,
       expires_at: expiration_time
     }

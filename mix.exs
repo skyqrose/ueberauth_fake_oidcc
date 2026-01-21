@@ -16,7 +16,7 @@ defmodule UeberauthFakeOidcc.MixProject do
       {:phoenix, "~> 1.7"},
       {:phoenix_live_view, "~> 1.1"},
       {:ueberauth, "~> 0.10"},
-      {:ueberauth_oidcc, "~> 0.4"},
+      {:ueberauth_oidcc, "~> 0.4"}
     ]
   end
 end

@@ -6,11 +6,12 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
-    opts = get_options!(conn)
+    opts = Helpers.options(conn)
     groups = Keyword.get(opts, :groups, [])
 
     conn
     |> put_resp_content_type("text/html")
+    |> put_format(:html)
     |> put_view(__MODULE__.View)
     |> render(:fake_login, groups: groups, layout: false)
     |> halt()
@@ -56,7 +57,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def extra(conn) do
-    opts = get_options!(conn)
+    opts = Helpers.options(conn)
     client_id = Keyword.get(opts, :client_id, "fake_client_id")
 
     groups = conn.params["groups"] || []
@@ -112,25 +113,5 @@ defmodule Ueberauth.Strategy.FakeOidcc do
       </main>
       """
     end
-  end
-
-  defp get_options!(conn) do
-    compile_opts = Helpers.options(conn) || []
-    provider = Helpers.strategy_name(conn)
-
-    # TODO provider is nil cuz haven't come through normal controller at /auth/<provider>
-    # how to specify it in the test?
-
-    runtime_opts =
-      (Application.get_env(:ueberauth, Ueberauth) || [])
-      |> Keyword.get(:providers, [])
-      |> Keyword.get(provider, [])
-
-
-    dbg()
-    UeberauthOidcc.Config.merge_and_expand_configuration([
-      compile_opts,
-      runtime_opts
-    ])
   end
 end

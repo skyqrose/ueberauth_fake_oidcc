@@ -2,44 +2,28 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
   # use FakeOidccWeb.ConnCase
   use ExUnit.Case
 
-  # import Plug.Conn
-  # import Phoenix.ConnTest
+  import Plug.Test
 
   alias Ueberauth.Strategy.FakeOidcc
 
-  defmacro config(opts) do
-    quote do
-      Application.put_env(:ueberauth, Ueberauth,
-        providers: [
-          providername: {Ueberauth.Strategy.FakeOidcc, unquote(opts)}
-        ]
-      )
-
-      on_exit(fn ->
-        Application.delete_env(:ueberauth, Ueberauth)
-      end)
-    end
-  end
-
   describe "handle_request!" do
     test "renders login page" do
-      config(groups: ["group1", "group2"])
-      conn = Phoenix.ConnTest.build_conn()
-
       conn =
-        conn
-        |> FakeOidcc.handle_request!()
+        conn(:get, "/auth/providername")
+        |> init_test_session(%{})
+        |> Ueberauth.run_request(:providername, {FakeOidcc, [
+          client_id: "custom-client-id",
+          groups: ["group1", "group2"],
+        ]})
 
       assert conn.resp_body =~ "group2"
     end
 
-    test "renders login page with no groups" do
-      config([])
-      conn = Phoenix.ConnTest.build_conn()
-
+    test "renders login page with default config" do
       conn =
-        conn
-        |> FakeOidcc.handle_request!()
+        conn(:get, "/auth/providername")
+        |> init_test_session(%{})
+        |> Ueberauth.run_request(:providername, {FakeOidcc, []})
 
       assert conn.resp_body =~ "Log in"
     end

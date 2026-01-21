@@ -14,10 +14,11 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     |> put_format(:html)
     |> put_resp_content_type("text/html")
     |> put_view(__MODULE__.View)
+    |> put_layout(false)
+    |> put_root_layout(false)
     |> render(:fake_login,
       initial_email: initial_email,
-      roles: roles,
-      layout: false
+      roles: roles
     )
     |> halt()
   end
@@ -88,6 +89,9 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
+        claims: %{
+          "auth_time" => System.system_time(:second)
+        },
         userinfo:
           Map.merge(userinfo, %{
             "resource_access" => %{

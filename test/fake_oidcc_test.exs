@@ -4,31 +4,9 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
 
   import Plug.Test
 
-  alias Phoenix.ConnTest
   alias Ueberauth.Strategy.FakeOidcc
 
   describe "handle_request!" do
-    test "renders login page" do
-      conn =
-        conn(:get, "/auth/providername")
-        |> init_test_session(%{})
-        |> Ueberauth.run_request(:providername, {FakeOidcc, [
-          client_id: "custom-client-id",
-          roles: ["role1", "role2"],
-        ]})
-
-      assert conn.resp_body =~ "role2"
-    end
-
-    test "renders login page with default config" do
-      conn =
-        conn(:get, "/auth/providername")
-        |> init_test_session(%{})
-        |> Ueberauth.run_request(:providername, {FakeOidcc, FakeOidcc.default_options()})
-
-      assert conn.resp_body =~ "Log in"
-    end
-
     test "renders login page with empty config" do
       conn =
         conn(:get, "/auth/providername")
@@ -37,11 +15,24 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
 
       assert conn.resp_body =~ "Log in"
     end
+
+    test "renders login page with full config" do
+      conn =
+        conn(:get, "/auth/providername")
+        |> init_test_session(%{})
+        |> Ueberauth.run_request(:providername, {FakeOidcc, [
+          initial_email: "initial@email.example",
+          roles: ["role1", "role2"]
+        ]})
+
+      assert conn.resp_body =~ "initial@email.example"
+      assert conn.resp_body =~ "role2"
+    end
   end
 
   describe "handle_callback" do
     # also covers uid, credentials, info, extra
-    test "works" do
+    test "works with default config" do
       conn =
         conn(:get, "/auth/providername/callback?email=test@test.example")
         |> init_test_session(%{})
@@ -58,14 +49,14 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
         credentials: %Ueberauth.Auth.Credentials{
           token: "fake_access_token",
           refresh_token: "fake_refresh_token",
-          # TODO assert expires here?
         },
         extra: %Ueberauth.Auth.Extra{
-          # TODO roles?
-          # under client_id
+          # "roles" => [],
+          # "resource_access" => %{
+          #   "fake_client_id" => %{"roles" => []}
+          # },
         }
       } = conn.assigns.ueberauth_auth
-
     end
 
     test "is invalid without email" do

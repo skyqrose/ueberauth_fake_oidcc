@@ -1,5 +1,5 @@
 defmodule UeberauthFakeOidcc do
   @moduledoc """
-  Documentation for `UeberauthFakeOidcc`.
+  See repo README.md for docs
   """
 end

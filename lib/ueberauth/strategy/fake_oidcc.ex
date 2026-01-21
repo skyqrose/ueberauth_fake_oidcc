@@ -7,13 +7,18 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
     opts = Helpers.options(conn)
+    initial_email = Keyword.get(opts, :initial_email, "user@test.example")
     roles = Keyword.get(opts, :roles, [])
 
     conn
     |> put_format(:html)
     |> put_resp_content_type("text/html")
     |> put_view(__MODULE__.View)
-    |> render(:fake_login, roles: roles, layout: false)
+    |> render(:fake_login,
+      initial_email: initial_email,
+      roles: roles,
+      layout: false
+    )
     |> halt()
   end
 
@@ -28,12 +33,16 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   end
 
   @impl Ueberauth.Strategy
-  def uid(_conn) do
-    "fake_uid"
+  def uid(conn) do
+    opts = Helpers.options(conn)
+    Keyword.get(opts, :uid, "fake_uid")
   end
 
   @impl Ueberauth.Strategy
-  def credentials(_conn) do
+  def credentials(conn) do
+    opts = Helpers.options(conn)
+    credentials = Keyword.get(opts, :credentials, %{})
+
     # TODO make configurable?
     nine_hours_in_seconds = 9 * 60 * 60
     expiration_time = System.system_time(:second) + nine_hours_in_seconds
@@ -44,6 +53,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
       expires: true,
       expires_at: expiration_time
     }
+    |> Map.merge(credentials)
   end
 
   @impl Ueberauth.Strategy
@@ -55,20 +65,35 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     }
   end
 
+  # control all info coming out at compile time (only email at runtime?)
+  # and selected roles
+  # could add more form fields, but don't want to unless i actually have to
+
+  # uid: sub
+  # credentials: token, refresh -token, expires, expires_at
+  # expires at: glorbit: 9hr. mycharlie: check get_session(:expiration_datetime) first, then 9h
+  # mycharlie sets other: idtoken for its own use
+
+  # info: email
+  # extra: client_id, roles
+
   @impl Ueberauth.Strategy
   def extra(conn) do
     opts = Helpers.options(conn)
     client_id = Keyword.get(opts, :client_id, "fake_client_id")
+    userinfo = Keyword.get(opts, :userinfo, %{})
 
     roles = conn.params["roles"] || []
 
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
-        userinfo: %{
-          "resource_access" => %{
-            client_id => %{"roles" => roles}
-          }
-        }
+        userinfo:
+          Map.merge(userinfo, %{
+            "resource_access" => %{
+              client_id => %{"roles" => roles}
+            },
+            "roles" => roles
+          })
       }
     }
   end
@@ -91,7 +116,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
           <div>
             <label>
               <!-- TODO configurable default email -->
-              Email: <input type="email" name="email" value="user@example.com" />
+              Email: <input type="email" name="email" value={@initial_email} />
             </label>
           </div>
           <%= for role <- @roles do %>

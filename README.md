@@ -18,13 +18,38 @@ end
 config :ueberauth, Ueberauth,
   providers: [
     keycloak: {Ueberauth.Strategy.FakeOidcc, [
-      client_id: "dev-client-id",
       roles: [
         "role1",
         "role2",
       ]
     ]}
   ]
+```
+
+Options that control the log in form:
+- `initial_email`: String initial value for the email input. Default `"user@test.example"`.
+- `roles`: List of string role names that can be chosen during login. Default `[]`.
+
+Options that control the auth data returned:
+- `client_id`: String client id. Default `"fake_client_id"`.
+- `credentials`: Map, a partial of `Ueberauth.Auth.Credentials`. Default `%{}`. Any values here will override default values in the returned credentials.
+- `uid`: String value to set in `auth.uid`. Default `"fake_uid"`.
+- `userinfo`: Map of fields to include in `auth.extra.userinfo`. Default `%{}`. Don't use the key `"roles"` or `"resource_access"`, since FakeOidcc sets those based on user input.
+
+Selected roles are added to the ueberauth result in two places:
+```ex
+%Ueberauth.Auth{
+  extra: %Ueberauth.Auth.Extra{
+    raw_info: %{
+      userinfo: %{
+        "resource_access" => %{
+          client_id => %{"roles" => roles}
+        },
+        "roles" => roles,
+      }
+    }
+  }
+}
 ```
 
 TODO:

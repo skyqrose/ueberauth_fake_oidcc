@@ -14,10 +14,10 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
         |> init_test_session(%{})
         |> Ueberauth.run_request(:providername, {FakeOidcc, [
           client_id: "custom-client-id",
-          groups: ["group1", "group2"],
+          roles: ["role1", "role2"],
         ]})
 
-      assert conn.resp_body =~ "group2"
+      assert conn.resp_body =~ "role2"
     end
 
     test "renders login page with default config" do
@@ -61,7 +61,7 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
           # TODO assert expires here?
         },
         extra: %Ueberauth.Auth.Extra{
-          # TODO groups?
+          # TODO roles?
           # under client_id
         }
       } = conn.assigns.ueberauth_auth

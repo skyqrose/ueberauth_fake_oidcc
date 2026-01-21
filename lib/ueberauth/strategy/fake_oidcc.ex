@@ -7,13 +7,13 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
     opts = Helpers.options(conn)
-    groups = Keyword.get(opts, :groups, [])
+    roles = Keyword.get(opts, :roles, [])
 
     conn
     |> put_format(:html)
     |> put_resp_content_type("text/html")
     |> put_view(__MODULE__.View)
-    |> render(:fake_login, groups: groups, layout: false)
+    |> render(:fake_login, roles: roles, layout: false)
     |> halt()
   end
 
@@ -60,13 +60,13 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     opts = Helpers.options(conn)
     client_id = Keyword.get(opts, :client_id, "fake_client_id")
 
-    groups = conn.params["groups"] || []
+    roles = conn.params["roles"] || []
 
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
         userinfo: %{
           "resource_access" => %{
-            client_id => %{"roles" => groups}
+            client_id => %{"roles" => roles}
           }
         }
       }
@@ -94,11 +94,11 @@ defmodule Ueberauth.Strategy.FakeOidcc do
               Email: <input type="email" name="email" value="user@example.com" />
             </label>
           </div>
-          <%= for group <- @groups do %>
+          <%= for role <- @roles do %>
             <div>
               <label>
-                <input type="checkbox" name="groups[]" value={group} />
-                {group} group
+                <input type="checkbox" name="roles[]" value={role} />
+                {role} role
               </label>
             </div>
           <% end %>

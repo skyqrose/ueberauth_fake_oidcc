@@ -1,6 +1,6 @@
 # UeberauthFakeOidcc
 
-An implementation of [Ueberauth.Strategy](https://hexdocs.pm/ueberauth/Ueberauth.Strategy.html) for use in development environments, which allows specifying email and groups on each login.
+An implementation of [Ueberauth.Strategy](https://hexdocs.pm/ueberauth/Ueberauth.Strategy.html) for use in development environments, which allows specifying email and roles on each login.
 
 TODO screenshot
 
@@ -19,9 +19,9 @@ config :ueberauth, Ueberauth,
   providers: [
     keycloak: {Ueberauth.Strategy.FakeOidcc, [
       client_id: "dev-client-id",
-      groups: [
-        "group1",
-        "group2",
+      roles: [
+        "role1",
+        "role2",
       ]
     ]}
   ]

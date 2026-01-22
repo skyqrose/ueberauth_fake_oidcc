@@ -69,18 +69,6 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     }
   end
 
-  # control all info coming out at compile time (only email at runtime?)
-  # and selected roles
-  # could add more form fields, but don't want to unless i actually have to
-
-  # uid: sub
-  # credentials: token, refresh -token, expires, expires_at
-  # expires at: glorbit: 9hr. mycharlie: check get_session(:expiration_datetime) first, then 9h
-  # mycharlie sets other: idtoken for its own use
-
-  # info: email
-  # extra: client_id, roles
-
   @impl Ueberauth.Strategy
   def extra(conn) do
     opts = Helpers.options(conn)
@@ -115,15 +103,13 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   defmodule View do
     use Phoenix.Component
-    # TODO options for failure modes: redirect to invalid?
-
     def fake_login(assigns) do
       checked = length(assigns.roles) == 1
 
+      # TODO configurable callback url
       ~H"""
       <main class="p-4">
         <h1>Fake Keycloak/Oidcc</h1>
-        <!-- TODO configurable callback url -->
         <form action={"/auth/#{@provider}/callback"}>
           <div>
             <label>

@@ -6,6 +6,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
+    provider = Helpers.strategy_name(conn)
     opts = Helpers.options(conn)
     initial_email = Keyword.get(opts, :initial_email, "user@test.example")
     roles = Keyword.get(opts, :roles, [])
@@ -17,6 +18,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     |> put_layout(false)
     |> put_root_layout(false)
     |> render(:fake_login,
+      provider: provider,
       initial_email: initial_email,
       roles: roles
     )
@@ -117,10 +119,9 @@ defmodule Ueberauth.Strategy.FakeOidcc do
       <main class="p-4">
         <h1>Fake Keycloak/Oidcc</h1>
         <!-- TODO configurable callback url -->
-        <form action="/auth/keycloak/callback">
+        <form action={"/auth/#{@provider}/callback"}>
           <div>
             <label>
-              <!-- TODO configurable default email -->
               Email: <input type="email" name="email" value={@initial_email} />
             </label>
           </div>

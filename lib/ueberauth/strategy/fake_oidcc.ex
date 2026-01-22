@@ -118,6 +118,8 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     # TODO options for failure modes: redirect to invalid?
 
     def fake_login(assigns) do
+      checked = length(assigns.roles) == 1
+
       ~H"""
       <main class="p-4">
         <h1>Fake Keycloak/Oidcc</h1>
@@ -128,11 +130,12 @@ defmodule Ueberauth.Strategy.FakeOidcc do
               Email: <input type="email" name="email" value={@initial_email} />
             </label>
           </div>
+          Roles:
           <%= for role <- @roles do %>
             <div>
               <label>
-                <input type="checkbox" name="roles[]" value={role} />
-                {role} role
+                <input type="checkbox" name="roles[]" value={role} checked={checked} />
+                {role}
               </label>
             </div>
           <% end %>

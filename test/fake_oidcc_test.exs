@@ -58,7 +58,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                extra: %Ueberauth.Auth.Extra{
                  raw_info: %UeberauthOidcc.RawInfo{
                    claims: %{
-                     "auth_time" => _
+                     "auth_time" => _,
+                     "iat" => _
                    },
                    userinfo: %{
                      "roles" => [],

@@ -89,10 +89,13 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
     roles = conn.params["roles"] || []
 
+    time = System.system_time(:second)
+
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
         claims: %{
-          "auth_time" => System.system_time(:second)
+          "auth_time" => time,
+          "iat" => time
         },
         userinfo:
           Map.merge(userinfo, %{

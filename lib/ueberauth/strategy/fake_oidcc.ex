@@ -45,10 +45,10 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   def credentials(conn) do
     opts = Helpers.options(conn)
     credentials = Keyword.get(opts, :credentials, %{})
+    ttl = Keyword.get(opts, :ttl, 9 * 60 * 60)
 
-    # TODO make configurable?
-    nine_hours_in_seconds = 9 * 60 * 60
-    expiration_time = System.system_time(:second) + nine_hours_in_seconds
+    now = System.system_time(:second)
+    expiration_time = now + ttl
 
     %Ueberauth.Auth.Credentials{
       token: "fake_access_token",

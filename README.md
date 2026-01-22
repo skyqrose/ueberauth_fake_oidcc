@@ -33,6 +33,7 @@ Options that control the log in form:
 Options that control the auth data returned:
 - `client_id`: String client id. Default `"fake_client_id"`.
 - `credentials`: Map, a partial of `Ueberauth.Auth.Credentials`. Default `%{}`. Any values here will override default values in the returned credentials.
+- `ttl`: TTL in seconds for the credential. Default `9 * 60 * 60`.
 - `uid`: String value to set in `auth.uid`. Default `"fake_uid"`.
 - `userinfo`: Map of fields to include in `auth.extra.userinfo`. Default `%{}`. Don't use the key `"roles"` or `"resource_access"`, since FakeOidcc sets those based on user input.
 

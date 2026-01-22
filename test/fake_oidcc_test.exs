@@ -58,8 +58,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                extra: %Ueberauth.Auth.Extra{
                  raw_info: %UeberauthOidcc.RawInfo{
                    claims: %{
-                     "auth_time" => _,
-                     "iat" => _
+                     "auth_time" => auth_time,
+                     "iat" => auth_time
                    },
                    userinfo: %{
                      "roles" => [],
@@ -86,6 +86,7 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
            [
              client_id: "custom_client_id",
              credentials: %{other: %{custom_field: "value1"}},
+             ttl: 10,
              uid: "custom_uid",
              userinfo: %{"custom_field" => "value2"}
            ]}
@@ -102,12 +103,14 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                credentials: %Ueberauth.Auth.Credentials{
                  token: "fake_access_token",
                  refresh_token: "fake_refresh_token",
+                 expires_at: expires_at,
                  other: %{custom_field: "value1"}
                },
                extra: %Ueberauth.Auth.Extra{
                  raw_info: %UeberauthOidcc.RawInfo{
                    claims: %{
-                     "auth_time" => _
+                     "auth_time" => auth_time,
+                     "iat" => auth_time
                    },
                    userinfo: %{
                      "custom_field" => "value2",
@@ -119,6 +122,10 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                  }
                }
              } = conn.assigns.ueberauth_auth
+
+      # allow wiggle room on ttl calculation to avoid flaky test
+      ttl = expires_at - auth_time
+      assert ttl >= 9 and ttl <= 11
     end
 
     test "is invalid without email" do

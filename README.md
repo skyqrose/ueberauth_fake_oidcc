@@ -2,7 +2,7 @@
 
 An implementation of [Ueberauth.Strategy](https://hexdocs.pm/ueberauth/Ueberauth.Strategy.html) for use in development environments, which allows specifying email and roles on each login.
 
-TODO screenshot
+<img src="screenshot.png" alt="Basic log in page. Input for email. Checkboxes for roles to assign. And a submit button." />
 
 ## Installation
 
@@ -51,8 +51,3 @@ Selected roles are added to the ueberauth result in two places:
   }
 }
 ```
-
-TODO:
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/ueberauth_fake_oidcc>.

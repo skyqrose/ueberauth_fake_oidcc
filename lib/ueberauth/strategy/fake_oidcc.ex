@@ -20,7 +20,8 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     |> render(:fake_login,
       provider: provider,
       initial_email: initial_email,
-      roles: roles
+      roles: roles,
+      checked: length(roles) == 1
     )
     |> halt()
   end
@@ -104,8 +105,6 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   defmodule View do
     use Phoenix.Component
     def fake_login(assigns) do
-      checked = length(assigns.roles) == 1
-
       # TODO configurable callback url
       ~H"""
       <main class="p-4">
@@ -120,7 +119,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
           <%= for role <- @roles do %>
             <div>
               <label>
-                <input type="checkbox" name="roles[]" value={role} checked={checked} />
+                <input type="checkbox" name="roles[]" value={role} checked={@checked} />
                 {role}
               </label>
             </div>

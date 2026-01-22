@@ -74,15 +74,22 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
 
     test "works with full config" do
       conn =
-        conn(:get, "/auth/providername/callback?email=test@test.example&roles[]=role1&roles[]=role2")
+        conn(
+          :get,
+          "/auth/providername/callback?email=test@test.example&roles[]=role1&roles[]=role2"
+        )
         |> init_test_session(%{})
         |> Plug.Conn.fetch_query_params()
-        |> Ueberauth.run_callback(:providername, {FakeOidcc, [
-          client_id: "custom_client_id",
-          credentials: %{other: %{custom_field: "value1"}},
-          uid: "custom_uid",
-          userinfo: %{"custom_field" => "value2"}
-        ]})
+        |> Ueberauth.run_callback(
+          :providername,
+          {FakeOidcc,
+           [
+             client_id: "custom_client_id",
+             credentials: %{other: %{custom_field: "value1"}},
+             uid: "custom_uid",
+             userinfo: %{"custom_field" => "value2"}
+           ]}
+        )
 
       assert Map.get(conn.assigns, :ueberauth_failure) == nil
 

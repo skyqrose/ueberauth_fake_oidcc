@@ -14,7 +14,7 @@ defmodule UeberauthFakeOidcc.MixProject do
     [
       # needed for showing the fake login page (but you were probably using Phoenix anyway)
       {:phoenix, "~> 1.7"},
-      {:phoenix_live_view, "~> 1.1"},
+      {:phoenix_live_view, "~> 1.0"},
       {:ueberauth, "~> 0.10"},
       {:ueberauth_oidcc, "~> 0.4"}
     ]

@@ -104,6 +104,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   defmodule View do
     use Phoenix.Component
+
     def fake_login(assigns) do
       # TODO configurable callback url
       ~H"""

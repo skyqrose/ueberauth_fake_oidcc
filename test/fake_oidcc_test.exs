@@ -61,7 +61,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                  raw_info: %UeberauthOidcc.RawInfo{
                    claims: %{
                      "auth_time" => auth_time,
-                     "iat" => auth_time
+                     "iat" => auth_time,
+                     "sub" => "fake_uid"
                    },
                    userinfo: %{
                      "roles" => [],
@@ -114,7 +115,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                  raw_info: %UeberauthOidcc.RawInfo{
                    claims: %{
                      "auth_time" => auth_time,
-                     "iat" => auth_time
+                     "iat" => auth_time,
+                     "sub" => "custom_uid"
                    },
                    userinfo: %{
                      "custom_field" => "value2",

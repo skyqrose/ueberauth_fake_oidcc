@@ -74,6 +74,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   @impl Ueberauth.Strategy
   def extra(conn) do
     opts = Helpers.options(conn)
+    uid = Keyword.get(opts, :uid, "fake_uid")
     client_id = Keyword.get(opts, :client_id, "fake_client_id")
     userinfo = Keyword.get(opts, :userinfo, %{})
 
@@ -85,7 +86,8 @@ defmodule Ueberauth.Strategy.FakeOidcc do
       raw_info: %UeberauthOidcc.RawInfo{
         claims: %{
           "auth_time" => time,
-          "iat" => time
+          "iat" => time,
+          "sub" => uid
         },
         userinfo:
           Map.merge(userinfo, %{

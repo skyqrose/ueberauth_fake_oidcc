@@ -10,7 +10,7 @@ An implementation of [Ueberauth.Strategy](https://hexdocs.pm/ueberauth/Ueberauth
 # mix.exs
 def deps do
   [
-    {:ueberauth_fake_oidcc, github: "skyqrose/ueberauth_fake_oidcc", tag: "v0.1.0", only: [:dev, :test]},
+    {:ueberauth_fake_oidcc, github: "skyqrose/ueberauth_fake_oidcc", tag: "v0.1.1", only: [:dev, :test]},
   ]
 end
 

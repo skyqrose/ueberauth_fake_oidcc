@@ -64,11 +64,11 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
   @impl Ueberauth.Strategy
   def info(conn) do
+    opts = Helpers.options(conn)
+    info = Keyword.get(opts, :info, %{})
     email = Map.get(conn.params, "email")
 
-    %Ueberauth.Auth.Info{
-      email: email
-    }
+    struct(Ueberauth.Auth.Info, Map.put(info, :email, email))
   end
 
   @impl Ueberauth.Strategy

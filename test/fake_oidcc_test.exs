@@ -88,6 +88,7 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
            [
              client_id: "custom_client_id",
              credentials: %{other: %{custom_field: "value1"}},
+             info: %{email: "overwritten", nickname: "nick"},
              ttl: 10,
              uid: "custom_uid",
              userinfo: %{"custom_field" => "value2"}
@@ -100,7 +101,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
                uid: "custom_uid",
                provider: :providername,
                info: %Ueberauth.Auth.Info{
-                 email: "test@test.example"
+                 email: "test@test.example",
+                 nickname: "nick"
                },
                credentials: %Ueberauth.Auth.Credentials{
                  token: "fake_access_token",

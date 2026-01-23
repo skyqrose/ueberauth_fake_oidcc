@@ -10,6 +10,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     opts = Helpers.options(conn)
     initial_email = Keyword.get(opts, :initial_email, "user@test.example")
     roles = Keyword.get(opts, :roles, [])
+    callback_path = Keyword.get(opts, :callback_path, "/auth/#{provider}/callback")
 
     conn
     |> put_format(:html)
@@ -18,7 +19,7 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     |> put_layout(false)
     |> put_root_layout(false)
     |> render(:fake_login,
-      provider: provider,
+      callback_path: callback_path,
       initial_email: initial_email,
       roles: roles,
       checked: length(roles) == 1
@@ -106,11 +107,10 @@ defmodule Ueberauth.Strategy.FakeOidcc do
     use Phoenix.Component
 
     def fake_login(assigns) do
-      # TODO configurable callback url
       ~H"""
       <main class="p-4">
         <h1>Fake Keycloak/Oidcc</h1>
-        <form action={"/auth/#{@provider}/callback"}>
+        <form action={@callback_path}>
           <div>
             <label>
               Email: <input type="email" name="email" value={@initial_email} />

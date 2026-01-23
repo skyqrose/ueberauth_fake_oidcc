@@ -24,11 +24,13 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
           :providername,
           {FakeOidcc,
            [
+             callback_path: "/callbackpath",
              initial_email: "initial@email.example",
              roles: ["role1", "role2"]
            ]}
         )
 
+      assert conn.resp_body =~ "/callbackpath"
       assert conn.resp_body =~ "initial@email.example"
       assert conn.resp_body =~ "role2"
     end

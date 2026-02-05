@@ -12,7 +12,7 @@ In order to fit the different ways that apps tend to use OIDCC, there are some c
 # mix.exs
 def deps do
   [
-    {:ueberauth_fake_oidcc, github: "skyqrose/ueberauth_fake_oidcc", tag: "v0.1.1", only: [:dev, :test]},
+    {:ueberauth_fake_oidcc, github: "skyqrose/ueberauth_fake_oidcc", tag: "v0.1.2", only: [:dev, :test]},
   ]
 end
 

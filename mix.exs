@@ -4,7 +4,7 @@ defmodule UeberauthFakeOidcc.MixProject do
   def project do
     [
       app: :ueberauth_fake_oidcc,
-      version: "0.1.0",
+      version: "0.1.2",
       elixir: ">= 1.16.0 and < 2.0.0",
       deps: deps()
     ]

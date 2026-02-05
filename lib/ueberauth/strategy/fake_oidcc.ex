@@ -15,11 +15,14 @@ defmodule Ueberauth.Strategy.FakeOidcc do
 
     if auto_redirect do
       query_params = [email: initial_email] ++ Enum.map(roles, fn role -> {"roles[]", role} end)
-      url = URI.append_query(
+
+      url =
+        URI.append_query(
           URI.parse(callback_path),
           URI.encode_query(query_params)
         )
         |> URI.to_string()
+
       conn
       |> redirect!(url)
       |> halt()

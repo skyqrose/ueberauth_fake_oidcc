@@ -42,11 +42,12 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
           :providername,
           {FakeOidcc,
            [
-             auto_redirect: true,
+             auto_redirect: true
            ]}
         )
 
-      assert Phoenix.ConnTest.redirected_to(conn) == "/auth/providername/callback?email=user%40test.example"
+      assert Phoenix.ConnTest.redirected_to(conn) ==
+               "/auth/providername/callback?email=user%40test.example"
     end
 
     test "auto_redirect (full config)" do
@@ -64,7 +65,8 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
            ]}
         )
 
-      assert Phoenix.ConnTest.redirected_to(conn) == "/callbackpath?email=initial%40email.example&roles%5B%5D=role1&roles%5B%5D=role2"
+      assert Phoenix.ConnTest.redirected_to(conn) ==
+               "/callbackpath?email=initial%40email.example&roles%5B%5D=role1&roles%5B%5D=role2"
     end
   end
 

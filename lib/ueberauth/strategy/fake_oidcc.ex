@@ -8,23 +8,36 @@ defmodule Ueberauth.Strategy.FakeOidcc do
   def handle_request!(conn) do
     provider = Helpers.strategy_name(conn)
     opts = Helpers.options(conn)
+    auto_redirect = Keyword.get(opts, :auto_redirect, false)
     initial_email = Keyword.get(opts, :initial_email, "user@test.example")
     roles = Keyword.get(opts, :roles, [])
     callback_path = Keyword.get(opts, :callback_path, "/auth/#{provider}/callback")
 
-    conn
-    |> put_format(:html)
-    |> put_resp_content_type("text/html")
-    |> put_view(__MODULE__.View)
-    |> put_layout(false)
-    |> put_root_layout(false)
-    |> render(:fake_login,
-      callback_path: callback_path,
-      initial_email: initial_email,
-      roles: roles,
-      checked: length(roles) == 1
-    )
-    |> halt()
+    if auto_redirect do
+      query_params = [email: initial_email] ++ Enum.map(roles, fn role -> {"roles[]", role} end)
+      url = URI.append_query(
+          URI.parse(callback_path),
+          URI.encode_query(query_params)
+        )
+        |> URI.to_string()
+      conn
+      |> redirect!(url)
+      |> halt()
+    else
+      conn
+      |> put_format(:html)
+      |> put_resp_content_type("text/html")
+      |> put_view(__MODULE__.View)
+      |> put_layout(false)
+      |> put_root_layout(false)
+      |> render(:fake_login,
+        callback_path: callback_path,
+        initial_email: initial_email,
+        roles: roles,
+        checked: length(roles) == 1
+      )
+      |> halt()
+    end
   end
 
   @impl Ueberauth.Strategy

@@ -27,6 +27,7 @@ config :ueberauth, Ueberauth,
 ```
 
 Options that control the log in form:
+- `auto_redirect`: Skip the login form and redirect immediately with the default email and all roles selected. Default `false`.
 - `callback_path`: String path for the callback url. Default `"/auth/#{provider}/callback"`
 - `initial_email`: String initial value for the email input. Default `"user@test.example"`.
 - `roles`: List of string role names that can be chosen during login. Default `[]`.

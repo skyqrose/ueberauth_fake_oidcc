@@ -1,5 +1,4 @@
 defmodule Ueberauth.Strategy.FakeOidccTest do
-  # use FakeOidccWeb.ConnCase
   use ExUnit.Case
 
   import Plug.Test
@@ -33,6 +32,39 @@ defmodule Ueberauth.Strategy.FakeOidccTest do
       assert conn.resp_body =~ "/callbackpath"
       assert conn.resp_body =~ "initial@email.example"
       assert conn.resp_body =~ "role2"
+    end
+
+    test "auto_redirect (basic config)" do
+      conn =
+        conn(:get, "/auth/providername")
+        |> init_test_session(%{})
+        |> Ueberauth.run_request(
+          :providername,
+          {FakeOidcc,
+           [
+             auto_redirect: true,
+           ]}
+        )
+
+      assert Phoenix.ConnTest.redirected_to(conn) == "/auth/providername/callback?email=user%40test.example"
+    end
+
+    test "auto_redirect (full config)" do
+      conn =
+        conn(:get, "/auth/providername")
+        |> init_test_session(%{})
+        |> Ueberauth.run_request(
+          :providername,
+          {FakeOidcc,
+           [
+             auto_redirect: true,
+             callback_path: "/callbackpath",
+             initial_email: "initial@email.example",
+             roles: ["role1", "role2"]
+           ]}
+        )
+
+      assert Phoenix.ConnTest.redirected_to(conn) == "/callbackpath?email=initial%40email.example&roles%5B%5D=role1&roles%5B%5D=role2"
     end
   end
 
